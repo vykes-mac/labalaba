@@ -1,6 +1,8 @@
 import 'package:chat/src/models/message.dart';
 import 'package:chat/src/models/user.dart';
+import 'package:chat/src/services/encryption/encryption_service.dart';
 import 'package:chat/src/services/message/message_service_impl.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rethinkdb_dart/rethinkdb_dart.dart';
 
@@ -13,8 +15,9 @@ void main() {
 
   setUp(() async {
     connection = await r.connect(host: '127.0.0.1', port: 28015);
+    final encryption = EncryptionService(Encrypter(AES(Key.fromLength(32))));
     await createDb(r, connection);
-    sut = MessageService(r, connection);
+    sut = MessageService(r, connection, encryption);
   });
 
   tearDown(() async {
@@ -47,23 +50,25 @@ void main() {
   });
 
   test('successfully subscribe and receive messages', () async {
+    final contents = 'this is a message';
     sut.messages(activeUser: user2).listen(expectAsync1((message) {
           expect(message.to, user2.id);
           expect(message.id, isNotEmpty);
+          expect(message.contents, contents);
         }, count: 2));
 
     Message message = Message(
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
-      contents: 'this is a message',
+      contents: contents,
     );
 
     Message secondMessage = Message(
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
-      contents: 'this is another message',
+      contents: contents,
     );
 
     await sut.send(message);
