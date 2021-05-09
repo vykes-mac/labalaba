@@ -1,7 +1,15 @@
 library chat;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'package:chat/src/models/message.dart';
+export 'package:chat/src/models/receipt.dart';
+export 'package:chat/src/models/user.dart';
+export 'package:chat/src/services/encryption/encryption_contract.dart';
+export 'package:chat/src/services/encryption/encryption_service.dart';
+export 'package:chat/src/services/message/message_service_contract.dart';
+export 'package:chat/src/services/message/message_service_impl.dart';
+export 'package:chat/src/services/receipt/receipt_service_contract.dart';
+export 'package:chat/src/services/receipt/receipt_service_impl.dart';
+export 'package:chat/src/services/typing/typing_notification.dart';
+export 'package:chat/src/services/typing/typing_notification_service_contract.dart';
+export 'package:chat/src/services/user/user_service_contract.dart';
+export 'package:chat/src/services/user/user_service_impl.dart';
