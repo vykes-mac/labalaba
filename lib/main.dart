@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:labalaba/composition_root.dart';
 import 'package:labalaba/theme.dart';
-import 'package:labalaba/ui/pages/onboarding/onboarding.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CompositionRoot.configure();
   runApp(MyApp());
 }
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme(context),
       darkTheme: darkTheme(context),
-      home: Onboarding(),
+      home: CompositionRoot.composeOnboardingUi(),
     );
   }
 }

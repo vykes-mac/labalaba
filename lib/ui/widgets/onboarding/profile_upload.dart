@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:labalaba/colors.dart';
+import 'package:labalaba/states_management/onboarding/profile_image_cubit.dart';
 import 'package:labalaba/theme.dart';
 
 class ProfileUpload extends StatelessWidget {
@@ -15,16 +19,28 @@ class ProfileUpload extends StatelessWidget {
         borderRadius: BorderRadius.circular(126.0),
         child: InkWell(
           borderRadius: BorderRadius.circular(126.0),
-          onTap: () {},
+          onTap: () async {
+            await context.read<ProfileImageCubit>().getImage();
+          },
           child: Stack(
             fit: StackFit.expand,
             children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.person_outline_rounded,
-                  size: 126.0,
-                  color: isLightTheme(context) ? kIconLight : Colors.black,
+                child: BlocBuilder<ProfileImageCubit, File>(
+                  builder: (context, state) {
+                    return state == null
+                        ? Icon(Icons.person_outline_rounded,
+                            size: 126.0,
+                            color: isLightTheme(context)
+                                ? kIconLight
+                                : Colors.black)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(126.0),
+                            child: Image.file(state,
+                                width: 126, height: 126, fit: BoxFit.fill),
+                          );
+                  },
                 ),
               ),
               Align(
