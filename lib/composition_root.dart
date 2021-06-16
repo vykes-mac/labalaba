@@ -2,8 +2,10 @@ import 'package:chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:labalaba/data/services/image_uploader.dart';
+import 'package:labalaba/states_management/home/home_cubit.dart';
 import 'package:labalaba/states_management/onboarding/onboarding_cubit.dart';
 import 'package:labalaba/states_management/onboarding/profile_image_cubit.dart';
+import 'package:labalaba/ui/pages/home/home.dart';
 import 'package:labalaba/ui/pages/onboarding/onboarding.dart';
 import 'package:rethinkdb_dart/rethinkdb_dart.dart';
 
@@ -31,6 +33,15 @@ class CompositionRoot {
         BlocProvider(create: (BuildContext context) => imageCubit),
       ],
       child: Onboarding(),
+    );
+  }
+
+  static Widget composeHomeUi() {
+    HomeCubit homeCubit = HomeCubit(_userService);
+
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (BuildContext context) => homeCubit)],
+      child: Home(),
     );
   }
 }
