@@ -17,7 +17,7 @@ void main() {
     connection = await r.connect(host: '127.0.0.1', port: 28015);
     final encryption = EncryptionService(Encrypter(AES(Key.fromLength(32))));
     await createDb(r, connection);
-    sut = MessageService(r, connection, encryption);
+    sut = MessageService(r, connection, encryption: encryption);
   });
 
   tearDown(() async {

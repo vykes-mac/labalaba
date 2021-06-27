@@ -32,6 +32,8 @@ dependencies:
   google_fonts: ^1.1.2
   http: ^0.12.2
   image_picker: ^0.6.7+22
+  intl: ^0.17.0
+  path: ^1.8.0
   rethinkdb_dart: ^2.3.2+6
   shared_preferences: ^2.0.6
   sqflite: ^2.0.0+3

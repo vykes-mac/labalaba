@@ -6,10 +6,19 @@ import 'package:labalaba/viewmodels/base_view_model.dart';
 
 class ChatsViewModel extends BaseViewModel {
   IDatasource _datasource;
+  IUserService _userService;
 
-  ChatsViewModel(this._datasource) : super(_datasource);
+  ChatsViewModel(this._datasource, this._userService) : super(_datasource);
 
-  Future<List<Chat>> getChats() async => await _datasource.findAllChats();
+  Future<List<Chat>> getChats() async {
+    final chats = await _datasource.findAllChats();
+    await Future.forEach(chats, (chat) async {
+      final user = await _userService.fetch(chat.id);
+      chat.from = user;
+    });
+
+    return chats;
+  }
 
   Future<void> receivedMessage(Message message) async {
     LocalMessage localMessage =

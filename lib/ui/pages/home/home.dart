@@ -1,7 +1,10 @@
+import 'package:chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:labalaba/states_management/home/chats_cubit.dart';
 import 'package:labalaba/states_management/home/home_cubit.dart';
 import 'package:labalaba/states_management/home/home_state.dart';
+import 'package:labalaba/states_management/message/message_bloc.dart';
 import 'package:labalaba/ui/widgets/home/active/active_users.dart';
 import 'package:labalaba/ui/widgets/home/chats/chats.dart';
 import 'package:labalaba/ui/widgets/home/profile_image.dart';
@@ -13,11 +16,20 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
+    context.read<ChatsCubit>().chats();
     context.read<HomeCubit>().activeUsers();
+    final user = User.fromJson({
+      "id": "a8022936-bb24-47f4-afd8-6e84becd5681",
+      "active": true,
+      "photo_url": '',
+      "last_seen": DateTime.now()
+    });
+
+    context.read<MessageBloc>().add(MessageEvent.onSubscribed(user));
   }
 
   @override
@@ -96,4 +108,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
