@@ -1,6 +1,7 @@
 import 'package:chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:labalaba/cache/local_cache.dart';
 import 'package:labalaba/data/datasources/datasource_contract.dart';
 import 'package:labalaba/data/datasources/sqflite_datasource.dart';
 import 'package:labalaba/data/factories/db_factory.dart';
@@ -10,10 +11,13 @@ import 'package:labalaba/states_management/home/home_cubit.dart';
 import 'package:labalaba/states_management/message/message_bloc.dart';
 import 'package:labalaba/states_management/onboarding/onboarding_cubit.dart';
 import 'package:labalaba/states_management/onboarding/profile_image_cubit.dart';
+import 'package:labalaba/states_management/typing/typing_notification_bloc.dart';
 import 'package:labalaba/ui/pages/home/home.dart';
 import 'package:labalaba/ui/pages/onboarding/onboarding.dart';
+import 'package:labalaba/ui/pages/onboarding/onboarding_router.dart';
 import 'package:labalaba/viewmodels/chats_view_model.dart';
 import 'package:rethinkdb_dart/rethinkdb_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CompositionRoot {
@@ -23,37 +27,53 @@ class CompositionRoot {
   static Database _db;
   static IMessageService _messageService;
   static IDatasource _datasource;
+  static ILocalCache _localCache;
+  static MessageBloc _messageBloc;
+  static ITypingNotification _typingNotification;
+  static TypingNotificationBloc _typingNotificationBloc;
 
   static configure() async {
     _r = Rethinkdb();
     _connection = await _r.connect(host: '127.0.0.1', port: 28015);
     _userService = UserService(_r, _connection);
     _messageService = MessageService(_r, _connection);
+    _typingNotification = TypingNotification(_r, _connection, _userService);
     _db = await LocalDatabaseFactory().createDatabase();
     _datasource = SqfliteDatasource(_db);
+    final sp = await SharedPreferences.getInstance();
+    _localCache = LocalCache(sp);
+    _messageBloc = MessageBloc(_messageService);
+    _typingNotificationBloc = TypingNotificationBloc(_typingNotification);
+
     // _db.delete('chats');
     // _db.delete('messages');
+  }
+
+  static Widget start() {
+    final user = _localCache.fetch('USER');
+    return user.isEmpty
+        ? composeOnboardingUi()
+        : composeHomeUi(User.fromJson(user));
   }
 
   static Widget composeOnboardingUi() {
     ImageUploader imageUploader = ImageUploader('http://localhost:3000/upload');
 
     OnboardingCubit onboardingCubit =
-        OnboardingCubit(_userService, imageUploader);
+        OnboardingCubit(_userService, imageUploader, _localCache);
     ProfileImageCubit imageCubit = ProfileImageCubit();
-
+    IOnboardingRouter router = OnboardingRouter(composeHomeUi);
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => onboardingCubit),
         BlocProvider(create: (BuildContext context) => imageCubit),
       ],
-      child: Onboarding(),
+      child: Onboarding(router),
     );
   }
 
-  static Widget composeHomeUi() {
-    HomeCubit homeCubit = HomeCubit(_userService);
-    MessageBloc messageBloc = MessageBloc(_messageService);
+  static Widget composeHomeUi(User me) {
+    HomeCubit homeCubit = HomeCubit(_userService, _localCache);
     ChatsViewModel viewModel = ChatsViewModel(_datasource, _userService);
     ChatsCubit chatsCubit = ChatsCubit(viewModel);
 
@@ -61,11 +81,12 @@ class CompositionRoot {
       providers: [
         BlocProvider(create: (BuildContext context) => homeCubit),
         BlocProvider(
-          create: (BuildContext context) => messageBloc,
+          create: (BuildContext context) => _messageBloc,
         ),
+        BlocProvider(create: (BuildContext context) => _typingNotificationBloc),
         BlocProvider(create: (BuildContext context) => chatsCubit)
       ],
-      child: Home(),
+      child: Home(me),
     );
   }
 }

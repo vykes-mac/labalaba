@@ -35,7 +35,7 @@ void main() {
       timestamp: DateTime.now(),
     );
 
-    when(messageService.send(message)).thenAnswer((_) async => true);
+    when(messageService.send(message)).thenAnswer((_) async => null);
     sut.add(MessageEvent.onMessageSent(message));
     expectLater(sut.stream, emits(MessageState.sent(message)));
   });

@@ -5,11 +5,15 @@ import 'package:labalaba/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CompositionRoot.configure();
-  runApp(MyApp());
+  final firstPage = CompositionRoot.start();
+  runApp(MyApp(firstPage));
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final Widget firstPage;
+
+  MyApp(this.firstPage);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme(context),
       darkTheme: darkTheme(context),
-      home: CompositionRoot.composeHomeUi(),
+      home: firstPage,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:chat/src/models/receipt.dart';
 import 'package:labalaba/data/datasources/datasource_contract.dart';
 import 'package:labalaba/models/chat.dart';
 import 'package:labalaba/models/local_message.dart';
@@ -10,14 +11,18 @@ class SqfliteDatasource implements IDatasource {
 
   @override
   Future<void> addChat(Chat chat) async {
-    await _db.insert('chats', chat.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await _db.transaction((txn) async {
+      await txn.insert('chats', chat.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.rollback);
+    });
   }
 
   @override
   Future<void> addMessage(LocalMessage message) async {
-    await _db.insert('messages', message.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    await _db.transaction((txn) async {
+      await txn.insert('messages', message.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    });
   }
 
   @override
@@ -111,5 +116,15 @@ class SqfliteDatasource implements IDatasource {
         where: 'id = ?',
         whereArgs: [message.message.id],
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> updateMessageReceipt(String messageId, ReceiptStatus status) {
+    return _db.transaction((txn) async {
+      await txn.update('messages', {'receipt': status.value()},
+          where: 'id = ?',
+          whereArgs: [messageId],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    });
   }
 }
