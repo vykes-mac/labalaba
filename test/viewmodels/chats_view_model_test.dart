@@ -7,13 +7,16 @@ import 'package:mockito/mockito.dart';
 
 class MockDatasource extends Mock implements IDatasource {}
 
+class MockUserService extends Mock implements IUserService {}
+
 void main() {
   ChatsViewModel sut;
   MockDatasource mockDatasource;
+  MockUserService mockUserService;
 
   setUp(() {
     mockDatasource = MockDatasource();
-    sut = ChatsViewModel(mockDatasource);
+    sut = ChatsViewModel(mockDatasource, mockUserService);
   });
 
   final message = Message.fromJson({
