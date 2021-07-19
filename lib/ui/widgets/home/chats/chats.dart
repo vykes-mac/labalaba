@@ -8,11 +8,13 @@ import 'package:labalaba/states_management/home/chats_cubit.dart';
 import 'package:labalaba/states_management/message/message_bloc.dart';
 import 'package:labalaba/states_management/typing/typing_notification_bloc.dart';
 import 'package:labalaba/theme.dart';
+import 'package:labalaba/ui/pages/home/home_router.dart';
 import 'package:labalaba/ui/widgets/home/profile_image.dart';
 
 class Chats extends StatefulWidget {
   final User user;
-  const Chats(this.user);
+  final IHomeRouter router;
+  const Chats(this.user, this.router);
 
   @override
   _ChatsState createState() => _ChatsState();
@@ -43,7 +45,14 @@ class _ChatsState extends State<Chats> {
   _buildListView() {
     return ListView.separated(
         padding: EdgeInsets.only(top: 30.0, right: 16.0),
-        itemBuilder: (_, indx) => _chatItem(chats[indx]),
+        itemBuilder: (_, indx) => GestureDetector(
+              child: _chatItem(chats[indx]),
+              onTap: () async {
+                await this.widget.router.onShowMessageThread(
+                    context, chats[indx].from, widget.user,
+                    chatId: chats[indx].id);
+              },
+            ),
         separatorBuilder: (_, __) => Divider(),
         itemCount: chats.length);
   }

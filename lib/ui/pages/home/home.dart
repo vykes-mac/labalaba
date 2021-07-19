@@ -5,13 +5,15 @@ import 'package:labalaba/states_management/home/chats_cubit.dart';
 import 'package:labalaba/states_management/home/home_cubit.dart';
 import 'package:labalaba/states_management/home/home_state.dart';
 import 'package:labalaba/states_management/message/message_bloc.dart';
+import 'package:labalaba/ui/pages/home/home_router.dart';
 import 'package:labalaba/ui/widgets/home/active/active_users.dart';
 import 'package:labalaba/ui/widgets/home/chats/chats.dart';
-import 'package:labalaba/ui/widgets/home/profile_image.dart';
+import 'package:labalaba/ui/widgets/shared/header_status.dart';
 
 class Home extends StatefulWidget {
   final User me;
-  const Home(this.me);
+  final IHomeRouter router;
+  const Home(this.me, this.router);
 
   @override
   _HomeState createState() => _HomeState();
@@ -33,36 +35,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Container(
-            width: double.maxFinite,
-            child: Row(
-              children: [
-                ProfileImage(
-                  imageUrl: _user.photoUrl,
-                  online: true,
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        _user.username,
-                        style: Theme.of(context).textTheme.caption.copyWith(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Text('online',
-                          style: Theme.of(context).textTheme.caption),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+          title: HeaderStatus(_user.username, _user.photoUrl, true),
           bottom: TabBar(
             indicatorPadding: EdgeInsets.only(top: 10.0, bottom: 10.0),
             tabs: [
@@ -96,8 +69,8 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         ),
         body: TabBarView(
           children: [
-            Chats(_user),
-            ActiveUsers(),
+            Chats(_user, widget.router),
+            ActiveUsers(widget.router, _user),
           ],
         ),
       ),
