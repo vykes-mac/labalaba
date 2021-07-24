@@ -51,6 +51,8 @@ class _ChatsState extends State<Chats> {
                 await this.widget.router.onShowMessageThread(
                     context, chats[indx].from, widget.user,
                     chatId: chats[indx].id);
+
+                await context.read<ChatsCubit>().chats();
               },
             ),
         separatorBuilder: (_, __) => Divider(),
