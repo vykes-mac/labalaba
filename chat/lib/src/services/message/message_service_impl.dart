@@ -30,10 +30,14 @@ class MessageService implements IMessageService {
   }
 
   @override
-  Future<Message> send(Message message) async {
-    var data = message.toJson();
-    if (_encryption != null)
-      data['contents'] = _encryption.encrypt(message.contents);
+  Future<Message> send(List<Message> messages) async {
+    final data = messages.map((message) {
+      var data = message.toJson();
+      if (_encryption != null)
+        data['contents'] = _encryption.encrypt(message.contents);
+      return data;
+    }).toList();
+
     Map record = await r
         .table('messages')
         .insert(data, {'return_changes': true}).run(_connection);

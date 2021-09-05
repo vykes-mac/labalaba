@@ -35,10 +35,10 @@ void main() {
   });
 
   test('sent typing notification successfully', () async {
-    TypingEvent typingEvent =
-        TypingEvent(from: user2.id, to: user.id, event: Typing.start);
+    TypingEvent typingEvent = TypingEvent(
+        chatId: '12', from: user2.id, to: user.id, event: Typing.start);
 
-    final res = await sut.send(event: typingEvent);
+    final res = await sut.send(events: [typingEvent]);
     expect(res, true);
   });
 
@@ -48,18 +48,20 @@ void main() {
     }, count: 2));
 
     TypingEvent typing = TypingEvent(
+      chatId: '123',
       to: user2.id,
       from: user.id,
       event: Typing.start,
     );
 
     TypingEvent stopTyping = TypingEvent(
+      chatId: '123',
       to: user2.id,
       from: user.id,
       event: Typing.stop,
     );
 
-    await sut.send(event: typing);
-    await sut.send(event: stopTyping);
+    await sut.send(events: [typing]);
+    await sut.send(events: [stopTyping]);
   });
 }

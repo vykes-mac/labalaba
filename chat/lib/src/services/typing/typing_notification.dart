@@ -18,13 +18,17 @@ class TypingNotification implements ITypingNotification {
   TypingNotification(this._r, this._connection, this._userService);
 
   @override
-  Future<bool> send({@required TypingEvent event}) async {
-    final receiver = await _userService.fetch(event.to);
-    if (!receiver.active) return false;
+  Future<bool> send({@required List<TypingEvent> events}) async {
+    final receivers =
+        await _userService.fetch(events.map((e) => e.to).toList());
+    if (receivers.isEmpty) return false;
+    events
+        .retainWhere((event) => receivers.map((e) => e.id).contains(event.to));
+    final data = events.map((e) => e.toJson()).toList();
     Map record = await _r
         .table('typing_events')
-        .insert(event.toJson(), {'conflict': 'update'}).run(_connection);
-    return record['inserted'] == 1;
+        .insert(data, {'conflict': 'update'}).run(_connection);
+    return record['inserted'] >= 1;
   }
 
   @override
@@ -70,9 +74,7 @@ class TypingNotification implements ITypingNotification {
   }
 
   _removeEvent(TypingEvent event) {
-    _r
-        .table('typing_events')
-        .get(event.id)
-        .delete({'return_changes': false}).run(_connection);
+    _r.table('typing_events').filter({'chat_id': event.chatId}).delete(
+        {'return_changes': false}).run(_connection);
   }
 }

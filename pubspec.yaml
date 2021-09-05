@@ -25,10 +25,10 @@ dependencies:
     sdk: flutter
   chat:
     path: ./chat
-  bloc: ^7.0.0
+  bloc: ^7.1.0
   cupertino_icons: ^1.0.2
-  equatable: ^2.0.2
-  flutter_bloc: ^7.0.1
+  equatable: ^2.0.3
+  flutter_bloc: ^7.1.0
   google_fonts: ^1.1.2
   http: ^0.12.2
   image_picker: ^0.6.7+22

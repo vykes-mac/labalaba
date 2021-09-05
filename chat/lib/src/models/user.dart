@@ -30,4 +30,10 @@ class User {
     user._id = json['id'];
     return user;
   }
+
+  @override
+  bool operator ==(Object other) => other is User && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

@@ -39,13 +39,14 @@ void main() {
 
   test('sent message successfully', () async {
     Message message = Message(
+      groupId: '123',
       from: user.id,
       to: '3456',
       timestamp: DateTime.now(),
       contents: 'this is a message',
     );
 
-    final res = await sut.send(message);
+    final res = await sut.send([message]);
     expect(res, true);
   });
 
@@ -58,6 +59,7 @@ void main() {
         }, count: 2));
 
     Message message = Message(
+      groupId: '123',
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
@@ -65,18 +67,20 @@ void main() {
     );
 
     Message secondMessage = Message(
+      groupId: '123',
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
       contents: contents,
     );
 
-    await sut.send(message);
-    await sut.send(secondMessage);
+    await sut.send([message]);
+    await sut.send([secondMessage]);
   });
 
   test('successfully subscribe and receive new messages ', () async {
     Message message = Message(
+      groupId: '1232',
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
@@ -84,19 +88,20 @@ void main() {
     );
 
     Message secondMessage = Message(
+      groupId: '123',
       from: user.id,
       to: user2.id,
       timestamp: DateTime.now(),
       contents: 'this is another message',
     );
 
-    await sut.send(message);
-    await sut.send(secondMessage).whenComplete(
-          () => sut.messages(activeUser: user2).listen(
-                expectAsync1((message) {
-                  expect(message.to, user2.id);
-                }, count: 2),
-              ),
-        );
+    await sut.send([message]);
+    await sut.send([secondMessage]).whenComplete(
+      () => sut.messages(activeUser: user2).listen(
+            expectAsync1((message) {
+              expect(message.to, user2.id);
+            }, count: 2),
+          ),
+    );
   });
 }
