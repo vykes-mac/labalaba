@@ -10,8 +10,12 @@ abstract class BaseViewModel {
 
   @protected
   Future<void> addMessage(LocalMessage message) async {
-    if (!await _isExistingChat(message.chatId))
-      await _createNewChat(message.chatId);
+    if (!await _isExistingChat(message.chatId)) {
+      final chat = Chat(message.chatId, ChatType.individual, membersId: [
+        {message.chatId: ""}
+      ]);
+      await createNewChat(chat);
+    }
     await _datasource.addMessage(message);
   }
 
@@ -19,8 +23,7 @@ abstract class BaseViewModel {
     return await _datasource.findChat(chatId) != null;
   }
 
-  Future<void> _createNewChat(String chatId) async {
-    final chat = Chat(chatId);
+  Future<void> createNewChat(Chat chat) async {
     await _datasource.addChat(chat);
   }
 }

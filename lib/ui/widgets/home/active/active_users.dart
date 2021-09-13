@@ -1,6 +1,7 @@
 import 'package:chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:labalaba/models/chat.dart';
 import 'package:labalaba/states_management/home/home_cubit.dart';
 import 'package:labalaba/states_management/home/home_state.dart';
 import 'package:labalaba/ui/pages/home/home_router.dart';
@@ -45,8 +46,10 @@ class _ActiveUsersState extends State<ActiveUsers> {
       itemBuilder: (BuildContext context, indx) => GestureDetector(
             child: _listItem(users[indx]),
             onTap: () => this.widget.router.onShowMessageThread(
-                context, users[indx], widget.me,
-                chatId: users[indx].id),
+                context,
+                [users[indx]],
+                widget.me,
+                Chat(users[indx].id, ChatType.individual)),
           ),
       separatorBuilder: (_, __) => Divider(),
       itemCount: users.length);

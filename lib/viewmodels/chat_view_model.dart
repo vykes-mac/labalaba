@@ -18,16 +18,18 @@ class ChatViewModel extends BaseViewModel {
   }
 
   Future<void> sentMessage(Message message) async {
+    final chatId = message.groupId != null ? message.groupId : message.to;
     LocalMessage localMessage =
-        LocalMessage(message.to, message, ReceiptStatus.sent);
+        LocalMessage(chatId, message, ReceiptStatus.sent);
     if (_chatId.isNotEmpty) return await _datasource.addMessage(localMessage);
     _chatId = localMessage.chatId;
     await addMessage(localMessage);
   }
 
   Future<void> receivedMessage(Message message) async {
+    final chatId = message.groupId != null ? message.groupId : message.from;
     LocalMessage localMessage =
-        LocalMessage(message.from, message, ReceiptStatus.deliverred);
+        LocalMessage(chatId, message, ReceiptStatus.deliverred);
     if (_chatId.isEmpty) _chatId = localMessage.chatId;
     if (localMessage.chatId != _chatId) otherMessages++;
     await addMessage(localMessage);

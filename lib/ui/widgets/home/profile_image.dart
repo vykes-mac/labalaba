@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:labalaba/colors.dart';
 import 'package:labalaba/ui/widgets/home/online_indicator.dart';
 
 class ProfileImage extends StatelessWidget {
@@ -16,12 +17,18 @@ class ProfileImage extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(126.0),
-            child: Image.network(
-              imageUrl,
-              width: 126,
-              height: 126,
-              fit: BoxFit.fill,
-            ),
+            child: imageUrl != null
+                ? Image.network(
+                    imageUrl,
+                    width: 126,
+                    height: 126,
+                    fit: BoxFit.fill,
+                  )
+                : Icon(
+                    Icons.group_rounded,
+                    size: 35,
+                    color: kPrimary,
+                  ),
           ),
           Align(
             alignment: Alignment.topRight,

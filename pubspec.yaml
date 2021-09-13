@@ -28,6 +28,7 @@ dependencies:
   bloc: ^7.1.0
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
+  modal_bottom_sheet: ^2.0.0
   flutter_bloc: ^7.1.0
   google_fonts: ^1.1.2
   http: ^0.12.2

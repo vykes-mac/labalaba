@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:labalaba/ui/widgets/home/profile_image.dart';
 
 class HeaderStatus extends StatelessWidget {
   final String username;
   final String imageUrl;
   final bool online;
-  final DateTime lastSeen;
-  final bool typing;
+  final String description;
+  final String typing;
   const HeaderStatus(this.username, this.imageUrl, this.online,
-      {this.lastSeen, this.typing});
+      {this.description, this.typing});
 
   @override
   Widget build(Object context) {
@@ -38,13 +37,11 @@ class HeaderStatus extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 12.0),
                 child: typing == null
                     ? Text(
-                        online
-                            ? 'online'
-                            : 'last seen ${DateFormat.yMd().add_jm().format(lastSeen)}',
+                        online ? 'online' : description,
                         style: Theme.of(context).textTheme.caption,
                       )
                     : Text(
-                        'typing..',
+                        typing,
                         style: Theme.of(context)
                             .textTheme
                             .caption
@@ -58,3 +55,7 @@ class HeaderStatus extends StatelessWidget {
     );
   }
 }
+
+
+//test with mutiple devices 
+// see you in the next video!!

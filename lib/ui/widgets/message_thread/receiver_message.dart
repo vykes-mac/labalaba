@@ -1,13 +1,18 @@
+import 'package:chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:labalaba/colors.dart';
+import 'package:labalaba/models/chat.dart';
 import 'package:labalaba/models/local_message.dart';
 import 'package:labalaba/theme.dart';
 
 class ReceiverMessage extends StatelessWidget {
-  final String _url;
+  final User _user;
   final LocalMessage _message;
-  const ReceiverMessage(this._message, this._url);
+  final ChatType type;
+  final Color color;
+  const ReceiverMessage(this._message, this._user, this.type, {Color color})
+      : this.color = color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +26,21 @@ class ReceiverMessage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (type == ChatType.group)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 22.0, bottom: 2.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        _user.username, //add username to chat bubble
+                        softWrap: true,
+                        style: Theme.of(context).textTheme.caption.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10),
+                      ),
+                    ),
+                  ),
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: isLightTheme(context) ? kBubbleLight : kBubbleDark,
@@ -62,8 +82,8 @@ class ReceiverMessage extends StatelessWidget {
             radius: 18,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
-              child:
-                  Image.network(_url, width: 30, height: 30, fit: BoxFit.fill),
+              child: Image.network(_user.photoUrl,
+                  width: 30, height: 30, fit: BoxFit.fill),
             ),
           ),
         ],
