@@ -1,4 +1,4 @@
-import 'package:chat/src/models/receipt.dart';
+import 'package:chat/chat.dart';
 import 'package:labalaba/data/datasources/datasource_contract.dart';
 import 'package:labalaba/models/chat.dart';
 import 'package:labalaba/models/local_message.dart';

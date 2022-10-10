@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:chat/chat.dart';
-import 'package:chat/src/models/message_group.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rethinkdb_dart/rethinkdb_dart.dart';
 

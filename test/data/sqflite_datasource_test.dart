@@ -31,7 +31,7 @@ void main() {
 
   test('should perform insert of chat to the database', () async {
     //arrange
-    final chat = Chat('1234');
+    final chat = Chat('1234', ChatType.individual);
     when(database.insert('chats', chat.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace))
         .thenAnswer((_) async => 1);
