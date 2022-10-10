@@ -1,18 +1,16 @@
-import 'package:flutter/foundation.dart';
-
 class User {
-  String get id => _id;
-  String username;
-  String photoUrl;
-  String _id;
-  bool active;
-  DateTime lastseen;
+  String? get id => _id;
+  String? username;
+  String? photoUrl;
+  String? _id;
+  bool? active;
+  DateTime? lastseen;
 
   User(
-      {@required this.username,
-      @required this.photoUrl,
-      @required this.active,
-      @required this.lastseen});
+      {required this.username,
+      required this.photoUrl,
+      required this.active,
+      required this.lastseen});
 
   toJson() => {
         'username': username,

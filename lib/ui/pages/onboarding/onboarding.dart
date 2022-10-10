@@ -78,7 +78,7 @@ class _OnboardingState extends State<Onboarding> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: kPrimary,
+                  backgroundColor: kPrimary,
                   elevation: 5.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(45.0),

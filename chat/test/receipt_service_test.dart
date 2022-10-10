@@ -2,24 +2,24 @@ import 'package:chat/src/models/receipt.dart';
 import 'package:chat/src/models/user.dart';
 import 'package:chat/src/services/receipt/receipt_service_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rethinkdb_dart/rethinkdb_dart.dart';
+import 'package:rethink_db_ns/rethink_db_ns.dart';
 
 import 'helpers.dart';
 
 void main() {
-  Rethinkdb r = Rethinkdb();
-  Connection connection;
-  ReceiptService sut;
+  RethinkDb r = RethinkDb();
+  Connection? connection;
+  late ReceiptService sut;
 
   setUp(() async {
     connection = await r.connect();
-    await createDb(r, connection);
+    await createDb(r, connection!);
     sut = ReceiptService(r, connection);
   });
 
   tearDown(() async {
     sut.dispose();
-    await cleanDb(r, connection);
+    await cleanDb(r, connection!);
   });
 
   final user = User.fromJson({

@@ -4,7 +4,7 @@ import 'package:encrypt/encrypt.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 main() {
-  IEncryption sut;
+  late IEncryption sut;
 
   setUp(() {
     final encrypter = Encrypter(AES(Key.fromLength(32)));

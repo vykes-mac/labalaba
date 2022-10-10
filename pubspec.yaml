@@ -35,14 +35,14 @@ dependencies:
   image_picker: ^0.6.7+22
   intl: ^0.17.0
   path: ^1.8.0
-  rethinkdb_dart: ^2.3.2+6
+  rethink_db_ns: ^0.0.4
   shared_preferences: ^2.0.6
   sqflite: ^2.0.0+3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.1.4
+  mockito: ^5.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

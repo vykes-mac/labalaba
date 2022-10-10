@@ -25,12 +25,12 @@ import 'package:labalaba/ui/pages/onboarding/onboarding_router.dart';
 import 'package:labalaba/ui/widgets/home/create_group.dart';
 import 'package:labalaba/viewmodels/chat_view_model.dart';
 import 'package:labalaba/viewmodels/chats_view_model.dart';
-import 'package:rethinkdb_dart/rethinkdb_dart.dart';
+import 'package:rethink_db_ns/rethink_db_ns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CompositionRoot {
-  static Rethinkdb _r;
+  static RethinkDb _r;
   static Connection _connection;
   static IUserService _userService;
   static Database _db;
@@ -47,7 +47,7 @@ class CompositionRoot {
   static ChatsViewModel _viewModel;
 
   static configure() async {
-    _r = Rethinkdb();
+    _r = RethinkDb();
     _connection = await _r.connect(host: '127.0.0.1', port: 28015);
     _userService = UserService(_r, _connection);
     _messageService = MessageService(_r, _connection);

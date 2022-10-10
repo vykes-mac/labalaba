@@ -3,21 +3,21 @@ import 'dart:async';
 import 'package:chat/src/models/receipt.dart';
 import 'package:chat/src/models/user.dart';
 import 'package:chat/src/services/receipt/receipt_service_contract.dart';
-import 'package:rethinkdb_dart/rethinkdb_dart.dart';
+import 'package:rethink_db_ns/rethink_db_ns.dart';
 
 class ReceiptService implements IReceiptService {
-  final Connection _connection;
-  final Rethinkdb r;
+  final Connection? _connection;
+  final RethinkDb r;
 
   final _controller = StreamController<Receipt>.broadcast();
-  StreamSubscription _changefeed;
+  StreamSubscription? _changefeed;
 
   ReceiptService(this.r, this._connection);
 
   @override
   dispose() {
     _changefeed?.cancel();
-    _controller?.close();
+    _controller.close();
   }
 
   @override
@@ -29,7 +29,7 @@ class ReceiptService implements IReceiptService {
   @override
   Future<bool> send(Receipt receipt) async {
     var data = receipt.toJson();
-    Map record = await r.table('receipts').insert(data).run(_connection);
+    Map record = await (r.table('receipts').insert(data).run(_connection!));
     return record['inserted'] == 1;
   }
 
@@ -38,7 +38,7 @@ class ReceiptService implements IReceiptService {
         .table('receipts')
         .filter({'recipient': user.id})
         .changes({'include_initial': true})
-        .run(_connection)
+        .run(_connection!)
         .asStream()
         .cast<Feed>()
         .listen((event) {
@@ -51,7 +51,7 @@ class ReceiptService implements IReceiptService {
                 _controller.sink.add(receipt);
               })
               .catchError((err) => print(err))
-              .onError((error, stackTrace) => print(error));
+              .onError((dynamic error, stackTrace) => print(error));
         });
   }
 
@@ -64,6 +64,6 @@ class ReceiptService implements IReceiptService {
     r
         .table('receipts')
         .get(receipt.id)
-        .delete({'return_changes': false}).run(_connection);
+        .delete({'return_changes': false}).run(_connection!);
   }
 }

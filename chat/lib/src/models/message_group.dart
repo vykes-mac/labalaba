@@ -1,16 +1,14 @@
-import 'package:flutter/foundation.dart';
-
 class MessageGroup {
-  String get id => _id;
-  String name;
-  String createdBy;
+  String? get id => _id;
+  String? name;
+  String? createdBy;
   List<String> members;
-  String _id;
+  String? _id;
 
   MessageGroup({
-    @required this.createdBy,
-    @required this.name,
-    @required this.members,
+    required this.createdBy,
+    required this.name,
+    required this.members,
   });
 
   toJson() => {

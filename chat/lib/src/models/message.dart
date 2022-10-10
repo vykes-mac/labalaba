@@ -1,19 +1,17 @@
-import 'package:flutter/foundation.dart';
-
 class Message {
-  String get id => _id;
-  final String from;
-  final String to;
-  final DateTime timestamp;
-  final String contents;
-  String _id;
-  String groupId;
+  String? get id => _id;
+  final String? from;
+  final String? to;
+  final DateTime? timestamp;
+  final String? contents;
+  String? _id;
+  String? groupId;
 
   Message(
-      {@required this.from,
-      @required this.to,
-      @required this.timestamp,
-      @required this.contents,
+      {required this.from,
+      required this.to,
+      required this.timestamp,
+      required this.contents,
       this.groupId});
 
   toJson() => {
